@@ -8,23 +8,28 @@ services:
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - "9201:9200"
+      - "9301:9300"
     environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ES_JAVA_OPTS: "-Xmx2g -Xms256m"
     networks:
       - elk
 
   logstash:
     build:
       context: logstash/
+      args:
+        HTTPS_PROXY: $HTTPS_PROXY
+        HTTP_PROXY: $HTTP_PROXY
+        https_proxy: $https_proxy
+        http_proxy: $http_proxy
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
     ports:
-      - "5000:5000"
+      - "5045:5044"
     environment:
-      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      LS_JAVA_OPTS: "-Xmx2g -Xms256m"
     networks:
       - elk
     depends_on:
@@ -36,11 +41,23 @@ services:
     volumes:
       - ./kibana/config/:/usr/share/kibana/config:ro
     ports:
-      - "5601:5601"
+      - "5602:5601"
     networks:
       - elk
     depends_on:
       - elasticsearch
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:6.1.0
+    command: -e -d "*"
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./filebeat/prospectors.d:/usr/share/filebeat/prospectors.d
+      - ./logstash/logstash-filter-sparql/spec/filters/logs:/mnt/log:ro
+    networks:
+      - elk
+    depends_on:
+      - logstash
 
 networks:
 

@@ -1,0 +1,10 @@
+- type: log
+  paths:
+    - /mnt/log/*
+  multiline:
+    pattern: 'sparql_query:'
+    negate: true
+    match: after
+    timeout: 1s
+  close_eof: true
+  close_timeout: 5s

@@ -1,0 +1,16 @@
+sparql_query:
+PREFIX : <http://rdf.example.com/>
+SELECT ?isoform ?isoformLabel ?length ?weight ?isoelectricPoint ?canonicalIsoform WHERE {
+  <http://identifiers.org/ncbigene/207> <http://rdf.example.com/biomart/encodesProtein> ?uniprot.
+  ?entry <http://www.w3.org/2004/02/skos/core#exactMatch> ?uniprot.
+  GRAPH ?graph {
+    ?entry <http://nextprot.org/rdf#isoform> ?isoform.
+    ?isoform <http://nextprot.org/rdf#sequence> ?sequence.
+    ?isoform <http://nextprot.org/rdf#canonicalIsoform> ?canonicalIsoform.
+    BIND(STRAFTER(STR(?isoform), "http://nextprot.org/rdf/isoform/") AS ?isoformLabel)
+    ?sequence <http://nextprot.org/rdf#length> ?length.
+    ?sequence <http://nextprot.org/rdf#molecularWeight> ?weight.
+    ?sequence <http://nextprot.org/rdf#isoelectricPoint> ?isoelectricPoint.
+  }
+  FILTER(?graph = <http://rdf.example.com/nextprot>)
+}

@@ -1,0 +1,3 @@
+sparql_query:
+PREFIX : <http://rdf.example.com/>
+SELECT ?type WHERE { <http://www.metaphacts.com/resource/admin/Templates> a ?type }

@@ -1,0 +1,16 @@
+# Copied from https://github.com/elastic/beats-docker/blob/master/build/filebeat/config/filebeat.yml & modified
+
+filebeat.config:
+  prospectors:
+    path: ${path.config}/prospectors.d/*.yml
+    reload.enabled: false
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+processors:
+- add_cloud_metadata:
+
+output.logstash:
+  hosts: ["logstash:5044"]
+
