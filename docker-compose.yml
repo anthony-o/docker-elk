@@ -48,7 +48,7 @@ services:
       - elasticsearch
 
   filebeat:
-    image: docker.elastic.co/beats/filebeat:6.1.0
+    image: docker.elastic.co/beats/filebeat:6.1.1
     command: -e -d "*"
     volumes:
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
